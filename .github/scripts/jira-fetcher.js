@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 // Simple Jira fetcher and prompt builder
 // Usage: node jira-fetcher.js --issue PROJ-123 --url https://your-jira --user EMAIL --token API_TOKEN
+// Or: node jira-fetcher.js --config config.json
+
+const fs = require('fs');
+const path = require('path');
 
 function parseArgs() {
   const args = {};
@@ -19,6 +23,45 @@ function parseArgs() {
     }
   }
   return args;
+}
+
+function loadConfig(configPath) {
+  try {
+    const fullPath = path.resolve(configPath);
+    const configFile = fs.readFileSync(fullPath, 'utf8');
+    const config = JSON.parse(configFile);
+    console.log(`✓ Config loaded from: ${fullPath}`);
+    return config;
+  } catch (error) {
+    console.error(`✗ Failed to load config from ${configPath}:`, error.message);
+    process.exit(1);
+  }
+}
+
+function mergeConfig(configData, cliArgs) {
+  // Start with config file values
+  const merged = { ...configData };
+  
+  // Override with CLI arguments (CLI takes precedence)
+  if (cliArgs.issue) merged.issue = cliArgs.issue;
+  if (cliArgs.i) merged.issue = cliArgs.i;
+  if (cliArgs.url) merged.url = cliArgs.url;
+  if (cliArgs.u) merged.url = cliArgs.u;
+  if (cliArgs.user) merged.user = cliArgs.user;
+  if (cliArgs.token) merged.token = cliArgs.token;
+  if (cliArgs.bearer) merged.bearer = cliArgs.bearer;
+  if (cliArgs.out) merged.out = cliArgs.out;
+
+  // Handle nested jira config object
+  if (configData.jira) {
+    merged.issue = merged.issue || configData.jira.issue;
+    merged.url = merged.url || configData.jira.url;
+    merged.user = merged.user || configData.jira.user;
+    merged.token = merged.token || configData.jira.token;
+    merged.bearer = merged.bearer || configData.jira.bearer;
+  }
+
+  return merged;
 }
 
 function safeText(value) {
@@ -193,16 +236,27 @@ async function fetchIssue(issueKey, baseUrl, auth) {
 }
 
 async function main() {
-  const args = parseArgs();
-  const issue = args.issue || args.i;
-  const baseUrl = args.url || args.u;
-  const user = args.user;
-  const token = args.token;
-  const bearer = args.bearer;
-  const out = args.out || 'prompt';
+  const cliArgs = parseArgs();
+  let config = {};
+
+  // Load config from file if --config is provided
+  if (cliArgs.config) {
+    config = loadConfig(cliArgs.config);
+  }
+
+  // Merge config file with CLI arguments (CLI takes precedence)
+  const merged = mergeConfig(config, cliArgs);
+
+  const issue = merged.issue;
+  const baseUrl = merged.url;
+  const user = merged.user;
+  const token = merged.token;
+  const bearer = merged.bearer;
+  const out = merged.out || 'prompt';
 
   if (!issue || !baseUrl) {
     console.error('Usage: node jira-fetcher.js --issue PROJ-123 --url https://your-jira --user EMAIL --token API_TOKEN');
+    console.error('Or:    node jira-fetcher.js --config config.json');
     process.exit(1);
   }
 

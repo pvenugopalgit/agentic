@@ -1,0 +1,13 @@
+{
+  "Feature File Name": "PROJ-124",
+  "fields": {
+    "summary": "Implement user authentication feature",
+    "description": "As a user, I want to be able to log in and log out of the application securely so that my data is protected.",
+    "acceptanceCriteria": [
+      "User can register with email and password.",
+      "User can log in with valid credentials.",
+      "User can log out successfully.",
+      "Password reset functionality is available."
+    ]
+  }
+}

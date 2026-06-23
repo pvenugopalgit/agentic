@@ -1,5 +1,5 @@
 ---
-name: locator
+name: pwlocator
 model: Claude Haiku 4.5 (copilot)
 description: This agent generates robust, dynamic XPath locators for web elements in a web page based on provided HTML snippets or description for Playwright Java test automation tool. Analyze HTPML snippets and returns stable XPaths with reasoning and alternatives in structured JSON.
 
