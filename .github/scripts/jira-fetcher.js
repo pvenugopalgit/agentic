@@ -31,6 +31,17 @@ function loadConfig(configPath) {
     const configFile = fs.readFileSync(fullPath, 'utf8');
     const config = JSON.parse(configFile);
     console.log(`✓ Config loaded from: ${fullPath}`);
+      // Sanitize common string values (strip accidental surrounding quotes)
+      if (config && config.jira) {
+        for (const k of ['url', 'user', 'token', 'bearer', 'issue']) {
+          if (typeof config.jira[k] === 'string') {
+            config.jira[k] = config.jira[k].trim();
+            if (config.jira[k].startsWith('"') && config.jira[k].endsWith('"')) {
+              config.jira[k] = config.jira[k].slice(1, -1);
+            }
+          }
+        }
+      }
     return config;
   } catch (error) {
     console.error(`✗ Failed to load config from ${configPath}:`, error.message);
@@ -247,12 +258,23 @@ async function main() {
   // Merge config file with CLI arguments (CLI takes precedence)
   const merged = mergeConfig(config, cliArgs);
 
-  const issue = merged.issue;
+  let issue = merged.issue;
   const baseUrl = merged.url;
   const user = merged.user;
   const token = merged.token;
   const bearer = merged.bearer;
   const out = merged.out || 'prompt';
+
+  // If issue key wasn't provided via CLI or config, prompt the user at runtime.
+  if (!issue) {
+    const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
+    issue = await new Promise(resolve => {
+      rl.question('Enter Jira issue key (e.g., PROJ-123): ', answer => {
+        rl.close();
+        resolve((answer || '').trim());
+      });
+    });
+  }
 
   if (!issue || !baseUrl) {
     console.error('Usage: node jira-fetcher.js --issue PROJ-123 --url https://your-jira --user EMAIL --token API_TOKEN');
@@ -269,8 +291,11 @@ async function main() {
     const prompt = buildJiraFeaturePrompt(jiraIssue);
     console.log(prompt);
   } catch (err) {
-    console.error('Error:', err.message || err);
-    process.exit(2);
+      console.error('Error:', err && err.message ? err.message : err);
+      // Avoid forcing an immediate exit from async handlers (can trigger libuv assertions on Windows).
+      // Instead set a non-zero exit code and return so Node can shut down gracefully.
+      process.exitCode = 2;
+      return;
   }
 }
 

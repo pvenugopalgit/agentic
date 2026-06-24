@@ -81,39 +81,33 @@ If the user has a `.github/config/config.json` file with pre-configured credenti
 
 
 ### Step 2: Fetch Jira Issue Details
-Using the provided credentials and issue key, the agent should:
-1. Call the jira-fetcher.js script to fetch issue details
-2. Parse the returned Jira issue JSON
-3. Extract: `summary`, `description`, `acceptance criteria`, `labels`, `priority`, `reporter`, `assignee`, `issuetype`, `components`, `fixVersions`, `comment`, and `attachment` fields
-
-### Step 3: Generate Feature File
-The agent should:
-1. Analyze the Jira fields and generate valid Gherkin feature content
-2. Create a `.feature` file at: `tests/features/<ISSUE_KEY>.feature`
-3. Return the generated feature content and confirm file creation
-
-### Step 4: Confirm Completion
-Display the generated feature file path and confirm the successful creation of the feature file. If any errors occurred during the process, provide clear error messages and guidance for resolution.
-
-
-## Usage - Command Line
-
-### Using Config File
-
-Strictly use config file path: `.github/config/config.json` for Jira credentials and base URL. The agent will fetch the Jira issue and generate the feature file automatically.
-
-```bash
-node .github/scripts/jira-fetcher.js --config .github/config/config.json
-```
-
-### Using CLI Arguments
-
-Run this command only when config file is not available. Provide Jira issue key, base URL, user email, and API token as arguments.
+Using the provided credentials and issue key, the agent should Call the jira-fetcher.js script to fetch issue details using below commands:
 
 ```bash
 # Fetch the Jira issue and print the LLM prompt to stdout
 node .github/scripts/jira-fetcher.js --issue PROJ-123 --url https://your-jira-instance.atlassian.net --user you@example.com --token YOUR_API_TOKEN
-
-# Print raw issue JSON instead of the prompt
-node .github/scripts/jira-fetcher.js --issue PROJ-123 --url https://your-jira-instance.atlassian.net --user you@example.com --token YOUR_API_TOKEN --out json
 ```
+
+### Step 3 Fetch Jira Issue Details
+
+1. Parse the returned Jira issue JSON
+2. Extract: `summary`, `description`, `acceptance criteria`, `labels`, `priority`, `reporter`, `assignee`, `issuetype`, `components`, `fixVersions`, `comment`, and `attachment` fields
+3. Analyze the Jira fields, if there is no data returned with the given issue key, It should prompt the user to re-enter a valid Jira issue key
+4. Analyze the extracted fields to identify acceptance criteria, description, and comments, display error messages if any required fields are missing, and prompt the user to provide additional information if necessary
+
+**Strict Instructions**
+1. The agent should not move to next step until it has successfully fetched and analyzed the Jira issue details.
+2. Do not proceed to next step if any required fields are missing or if the issue key is invalid. Prompt the user to re-enter a valid Jira issue key or provide missing information.
+3. Do not invent acceptance criteria or infer the existing scenarios or historical data if acceptance criteria or description are missing. The agent should prompt the user for clarification or additional information.
+
+
+### Step 4: Generate Feature File
+The agent should:
+
+
+1. Analyze the extracted fields and generate valid Gherkin feature content
+2. Create a `.feature` file at: `tests/features/<ISSUE_KEY>.feature`
+3. Return the generated feature content and confirm file creation
+
+### Step 5: Confirm Completion
+Display the generated feature file path and confirm the successful creation of the feature file. If any errors occurred during the process, provide clear error messages and guidance for resolution.
