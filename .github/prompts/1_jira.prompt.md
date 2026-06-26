@@ -99,6 +99,7 @@ node .github/scripts/jira-fetcher.js --issue PROJ-123 --url https://your-jira-in
 1. The agent should not move to next step until it has successfully fetched and analyzed the Jira issue details.
 2. Do not proceed to next step if any required fields are missing or if the issue key is invalid. Prompt the user to re-enter a valid Jira issue key or provide missing information.
 3. Do not invent acceptance criteria or infer the existing scenarios or historical data if acceptance criteria or description are missing. The agent should prompt the user for clarification or additional information.
+4. Take the context of existing feature files in `tests/features` directory into account when generating new feature files to avoid duplication or conflicts.
 
 
 ### Step 4: Generate Feature File
