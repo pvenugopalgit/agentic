@@ -108,7 +108,8 @@ The agent should:
 
 1. Analyze the extracted fields and generate valid Gherkin feature content
 2. Create a `.feature` file at: `tests/features/<ISSUE_KEY>.feature`
-3. Return the generated feature content and confirm file creation
+3. Add a tag to the feature file indicating it was generated from Jira, e.g., `@PROJ-123`
+4. Return the generated feature content and confirm file creation
 
 ### Step 5: Confirm Completion
 Display the generated feature file path and confirm the successful creation of the feature file. If any errors occurred during the process, provide clear error messages and guidance for resolution.

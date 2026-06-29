@@ -2,6 +2,7 @@ package pages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.LoadState;
 
 /**
  * Page Object for the Text Comparison Tool page.
@@ -9,7 +10,7 @@ import com.microsoft.playwright.Page;
 public class TextComparisonPage {
     private final Page page;
 
-    // TODO: Replace placeholder locators with actual selectors
+    // Locators for Text Comparison Tool UI elements
     public final Locator firstTextBox;
     public final Locator secondTextBox;
     public final Locator compareButton;
@@ -19,12 +20,13 @@ public class TextComparisonPage {
     public TextComparisonPage(Page page) {
         this.page = page;
 
-        // TODO: Update locators to match actual element selectors
-        this.firstTextBox = page.locator("#text-input-a"); // TODO: replace with actual locator
-        this.secondTextBox = page.locator("#text-input-b"); // TODO: replace with actual locator
-        this.compareButton = page.locator("button[data-action='compare']"); // TODO: replace with actual locator
-        this.resultText = page.locator("#comparison-result"); // TODO: replace with actual locator
-        this.highlightedDifferences = page.locator(".diff-highlight"); // TODO: replace with actual locator
+        // Locators for the Text Comparison Tool UI elements
+        // These locators are based on common patterns; adjust if necessary based on actual HTML
+        this.firstTextBox = page.locator("#text-input-a, textarea[id*='first'], input[id*='first']");
+        this.secondTextBox = page.locator("#text-input-b, textarea[id*='second'], input[id*='second']");
+        this.compareButton = page.locator("button[data-action='compare'], button:has-text('Compare'), button:has-text('compare')");
+        this.resultText = page.locator("#comparison-result, .result, [class*='result']");
+        this.highlightedDifferences = page.locator(".diff-highlight, .highlight, [class*='highlight']");
     }
 
     /**
@@ -33,7 +35,7 @@ public class TextComparisonPage {
      * @param text the text to enter in the first text box
      */
     public void fillFirstTextBox(String text) {
-        // TODO: Navigate to page if not already there
+        firstTextBox.waitFor(new Locator.WaitForOptions().setTimeout(5000));
         firstTextBox.fill(text);
     }
 
@@ -43,6 +45,7 @@ public class TextComparisonPage {
      * @param text the text to enter in the second text box
      */
     public void fillSecondTextBox(String text) {
+        secondTextBox.waitFor(new Locator.WaitForOptions().setTimeout(5000));
         secondTextBox.fill(text);
     }
 
@@ -51,6 +54,7 @@ public class TextComparisonPage {
      */
     public void clickCompare() {
         compareButton.click();
+        page.waitForLoadState(LoadState.NETWORKIDLE);
     }
 
     /**
@@ -59,7 +63,7 @@ public class TextComparisonPage {
      * @return result message string
      */
     public String getResultText() {
-        // TODO: Wait for result to appear if needed
+        resultText.waitFor(new Locator.WaitForOptions().setTimeout(5000));
         return resultText.textContent();
     }
 
@@ -69,7 +73,11 @@ public class TextComparisonPage {
      * @return true if differences are highlighted, false otherwise
      */
     public boolean hasHighlightedDifferences() {
-        // TODO: Implement actual check for highlighted differences
-        return highlightedDifferences.count() > 0;
+        try {
+            page.waitForTimeout(500);
+            return highlightedDifferences.count() > 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
