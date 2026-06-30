@@ -118,13 +118,7 @@ playwright_screenshot → save as `failure_<scenarioName>_<stepIndex>.png`
 playwright_get_page_source → extract relevant HTML section containing the target element
 ```
 
-Then apply locator healing rules from the XPath priority hierarchy:
-1. `data-testid` / `data-*` attributes (highest priority)
-2. Stable `id` (non-hashed)
-3. `name`, `aria-label`, `role`
-4. `placeholder`, `title`, `alt`
-5. Visible text with `normalize-space()`
-6. Parent-anchored relative XPath (last resort)
+Then apply locator healing rules from the XPath priority hierarchy "defined in `3_pwlocator.prompt.md`.
 
 ### Step 5: Auto-Heal
 
@@ -135,6 +129,9 @@ Then apply locator healing rules from the XPath priority hierarchy:
 4. Save the file
 
 **Example – before:**
+
+Ensure to use the locator strategy as per the '3_pwlocator.prompt.md' priority hierarchy. For example, if the original locator was a CSS selector that is now stale, replace it with a more stable XPath or data-testid attribute.
+
 ```java
 this.compareButton = page.locator("button[data-action='compare']");
 ```
@@ -155,6 +152,7 @@ this.compareButton = page.locator("//button[@data-testid='btn-compare']");
 2. Find the assertion that failed
 3. If the actual value is the correct expected value, update the assertion
 4. If the actual value signals a real bug, flag with `// HEAL-CHECK:` and do not auto-change
+5. Ensure to use soft assertion or logging to capture the actual vs expected values for review where necessary.
 
 **Assertion healing decision:**
 - Whitespace / casing difference → fix automatically

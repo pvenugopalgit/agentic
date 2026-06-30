@@ -1,0 +1,50 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic:
+      - banner
+    - generic [ref=e5]:
+      - generic:
+        - generic:
+          - generic:
+            - button "Skip to main content":
+              - generic: Skip to main content
+          - generic:
+            - button "Skip to navigation":
+              - generic: Skip to navigation
+      - generic [ref=e8]:
+        - banner:
+          - generic [ref=e10]:
+            - link "Testonics Testonics" [ref=e12] [cursor=pointer]:
+              - /url: /home
+              - img "Testonics" [ref=e13]
+              - generic [ref=e14]: Testonics
+            - navigation [ref=e15]:
+              - list [ref=e16]:
+                - listitem [ref=e17]:
+                  - link "Home" [ref=e20] [cursor=pointer]:
+                    - /url: /home
+                - listitem [ref=e22]:
+                  - link "ContactUs" [ref=e25] [cursor=pointer]:
+                    - /url: /contactus
+                - listitem [ref=e27]:
+                  - link "Register" [ref=e30] [cursor=pointer]:
+                    - /url: /register
+                - listitem [ref=e32]:
+                  - generic [ref=e34]:
+                    - link "Services" [ref=e35]
+                    - img [ref=e36] [cursor=pointer]
+                - listitem [ref=e42]:
+                  - link "Text Compartor" [ref=e45] [cursor=pointer]:
+                    - /url: /text-compartor
+            - button "Open search bar" [ref=e47] [cursor=pointer]:
+              - img [ref=e50]
+        - iframe [ref=e90]:
+          - iframe [ref=f1e2]:
+            
+        - generic [ref=e91]:
+          - button [ref=e92] [cursor=pointer]:
+            - img [ref=e95]
+          - generic:
+            - button "Google Sites" [ref=e98] [cursor=pointer]
+            - button "Report abuse" [ref=e100] [cursor=pointer]
+  - region

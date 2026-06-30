@@ -30,9 +30,10 @@ Autonomously execute the complete test automation pipeline for one or more Jira 
 1. **Fetch Jira story** → parse acceptance criteria
 2. **Generate Gherkin** `.feature` file
 3. **Generate Java step definitions** skeleton
-4. **Implement Playwright actions** in step definitions
-5. **Execute tests** via Playwright MCP
-6. **Analyse failures** and produce a remediation report
+4. **Generate or locate Page Object** classes for Playwright
+5. **Implement Playwright actions** in step definitions
+6. **Execute tests** via Playwright MCP
+7. **Analyse failures** and produce a remediation report
 
 The agent **never pauses to ask the user a question** once it has the Jira issue key(s) in hand. Every decision is made from available artifacts (config file, existing source files, feature files, page objects). If a value cannot be determined from these sources, the agent applies a safe documented default and logs it in the run summary.
 

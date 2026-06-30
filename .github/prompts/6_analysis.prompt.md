@@ -39,7 +39,7 @@ When the agent starts, prompt the user for:
 4. **Source root** – base path to step definitions and page objects (default: `src/test/java/`)
 5. **Feature files root** – path to feature files (default: `tests/features/`)
 
-If no report is provided, ask the user to paste the raw output.
+If no report is provided, ask the user to paste the raw output. If only partial logs are available, proceed with what is provided and note missing data in the final report.
 
 ---
 
@@ -159,51 +159,6 @@ REASONING:
   the result element is present before reading its text.
 ```
 
-#### Assertion Mismatch (`ASSERT`)
-```
-FILE:  src/test/java/stepDefinitions/TextComparisonToolSteps.java
-LINE:  101
-ISSUE: Expected "identical" but actual result text is "Texts are the same"
-
-CURRENT CODE:
-  Assert.assertTrue("Result should indicate texts are identical",
-      result.toLowerCase().contains("identical"));
-
-SUGGESTED FIX:
-  Assert.assertTrue("Result should indicate texts are identical",
-      result.toLowerCase().contains("identical") ||
-      result.toLowerCase().contains("same") ||
-      result.toLowerCase().contains("match"));
-
-REASONING:
-  Application returns "Texts are the same" instead of "identical". Both are semantically
-  correct per the feature file ("indicating both texts are identical"). The assertion
-  should be broadened to accept equivalent phrasing rather than requiring an exact word.
-  If the exact wording must match, update the feature file and product owner acceptance criteria.
-```
-
-#### Application Bug (`APP`)
-```
-SCENARIO: Compare two texts with minor differences
-STEP:     "the tool highlights the exact words or characters that differ"
-ISSUE:    Highlight elements never rendered in DOM across all 3 healing iterations
-
-EVIDENCE:
-  - Screenshot failure_highlightsDifferences_step4.png shows result text displayed but
-    no highlighted spans present in the output area
-  - DOM source confirms zero elements matching any diff/highlight selectors
-  - Feature KAN-4 line 15 expects visible difference highlights
-
-CLASSIFICATION: APP bug – highlight rendering feature not yet implemented or broken
-SUGGESTED ACTION:
-  1. Raise a bug ticket: "Diff highlighting not rendered for minor text differences"
-  2. Link to feature KAN-4 scenario "Compare two texts with minor differences"
-  3. Mark test with @pending or @known-bug tag until the feature is fixed:
-     @known-bug
-     Scenario: Compare two texts with minor differences
-  4. Do NOT modify the test assertion – it correctly validates the expected behavior
-```
-
 ---
 
 ### Step 7: Pattern Analysis
@@ -289,80 +244,6 @@ FAILURE DETAILS
   Error    : TimeoutError – next step read result before NETWORKIDLE
   Fix      : Add page.waitForLoadState(LoadState.NETWORKIDLE) after clickCompare()
   ─────────
-
-──────────────────────────────────────────────────────────────
-PATTERN ANALYSIS
-──────────────────────────────────────────────────────────────
-
-⚠ PATTERN: Locator Rot (LOC × 3) — TextComparisonPage.java
-  The Page Object was built with placeholder locators before the UI was finalized.
-  Live DOM differs from placeholder selectors in multiple fields.
-  RECOMMENDATION:
-    1. Run the locator agent (3_pwlocator) against the live page HTML
-    2. Update all locators in TextComparisonPage.java with data-testid XPaths
-    3. Confirm data-testid attributes with the development team
-
-⚠ PATTERN: Coverage Gap (TODO × 2) — TextComparisonToolSteps.java
-  Two step methods still contain TODO placeholders with commented-out code.
-  RECOMMENDATION:
-    Run the actions agent (4_actions) on TextComparisonToolSteps.java to
-    generate full implementations before re-running tests.
-
-──────────────────────────────────────────────────────────────
-PRIORITIZED REMEDIATION PLAN
-──────────────────────────────────────────────────────────────
-
-Priority 1 – Immediate (blocks test suite)
-  [ ] Raise APP bug ticket for diff highlighting not rendering (F-01)
-  [ ] Tag affected scenario with @known-bug until fix is deployed
-  [ ] Fix resultText locator in TextComparisonPage.java (F-02)
-
-Priority 2 – Short-term (stabilizes flaky tests)
-  [ ] Add NETWORKIDLE wait in userClicksCompare() (F-03)
-  [ ] Run 3_pwlocator agent on live page to regenerate all locators
-  [ ] Run 4_actions agent to implement remaining TODO step methods
-
-Priority 3 – Process improvement
-  [ ] Add data-testid attributes to all interactive UI elements (coordinate with dev)
-  [ ] Establish a locator review step in the CI pipeline
-  [ ] Add @smoke tag to core comparison scenarios for fast feedback
-
-──────────────────────────────────────────────────────────────
-SUGGESTED CODE PATCHES
-──────────────────────────────────────────────────────────────
-
-PATCH 1 – src/test/java/pages/TextComparisonPage.java
-
-  // BEFORE
-  this.resultText = page.locator("#comparison-result, .result, [class*='result']");
-  this.highlightedDifferences = page.locator(".diff-highlight, .highlight, [class*='highlight']");
-
-  // AFTER
-  this.resultText = page.locator("//div[@data-testid='comparison-result']");
-  this.highlightedDifferences = page.locator("//span[@data-testid='diff-highlight']");
-
-PATCH 2 – src/test/java/stepDefinitions/TextComparisonToolSteps.java
-
-  // BEFORE (line 47)
-  comparisonPage.clickCompare();
-  page.waitForLoadState();
-
-  // AFTER
-  comparisonPage.clickCompare();
-  page.waitForLoadState(LoadState.NETWORKIDLE);
-
-PATCH 3 – tests/features/KAN-4.feature (tag known bug)
-
-  // BEFORE
-  Scenario: Compare two texts with minor differences
-
-  // AFTER
-  @known-bug
-  Scenario: Compare two texts with minor differences
-
-==============================================================
-END OF ANALYSIS REPORT
-==============================================================
 ```
 
 ---
