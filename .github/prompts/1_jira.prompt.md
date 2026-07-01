@@ -1,6 +1,5 @@
 ---
 name: jira
-model: GPT-5 mini (copilot)
 description: Converts Jira story details into a complete Cucumber `.feature` file. Fetches issues directly from Jira via REST API and generates Gherkin scenarios based on acceptance criteria, descriptions, comments, and attachments.
 
 tools: ['grep_search', 'semantic_search', 'terminal', 'web', 'agent', 'todo', 'read', 'edit', 'execute']
@@ -28,7 +27,7 @@ Alternatively, the agent may accept a Jira issue JSON payload directly, but this
 - Use comments and attachments only when they add behavior clarity or important test context.
 
 ## Output Requirements
-feature file path: `tests/features/<issue-key>.feature` (e.g., `features/PROJ-123.feature`)
+feature file path: `src/test/resources/features/<issue-key>.feature` (e.g., `src/test/resources/features/PROJ-123.feature`)
 - Return only valid Gherkin feature text, with no markdown fences, JSON wrappers, or unrelated explanatory text.
 - Generate a `Feature:` section with a short description that reflects the Jira story intent.
 - Generate one or more `Scenario:` or `Scenario Outline:` sections that cover the acceptance criteria and story behavior.
@@ -99,7 +98,7 @@ node .github/scripts/jira-fetcher.js --issue PROJ-123 --url https://your-jira-in
 1. The agent should not move to next step until it has successfully fetched and analyzed the Jira issue details.
 2. Do not proceed to next step if any required fields are missing or if the issue key is invalid. Prompt the user to re-enter a valid Jira issue key or provide missing information.
 3. Do not invent acceptance criteria or infer the existing scenarios or historical data if acceptance criteria or description are missing. The agent should prompt the user for clarification or additional information.
-4. Take the context of existing feature files in `tests/features` directory into account when generating new feature files to avoid duplication or conflicts.
+4. Take the context of existing feature files in `src/test/resources/features` directory into account when generating new feature files to avoid duplication or conflicts.
 
 
 ### Step 4: Generate Feature File
@@ -107,7 +106,7 @@ The agent should:
 
 
 1. Analyze the extracted fields and generate valid Gherkin feature content
-2. Create a `.feature` file at: `tests/features/<ISSUE_KEY>.feature`
+2. Create a `.feature` file at: `src/test/resources/features/<ISSUE_KEY>.feature`
 3. Add a tag to the feature file indicating it was generated from Jira, e.g., `@PROJ-123`
 4. Return the generated feature content and confirm file creation
 

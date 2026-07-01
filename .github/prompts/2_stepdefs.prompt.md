@@ -117,7 +117,7 @@ public class SubscriptionSteps {
 
 ### Step 1: Gather User Input
 When the agent starts, it **MUST** prompt the user for:
-1. **Feature File Path** (e.g., `tests/features/PROJ-123.feature`)
+1. **Feature File Path** (e.g., `src/test/resources/features/PROJ-123.feature`)
    - Alternatively, accept the path from the calling agent (jira.agent.md)
    - If not provided, prompt the user to specify the feature file location
 
@@ -128,12 +128,12 @@ The agent should:
 3. Extract all unique steps (Given, When, Then, And, But) from all scenarios
 4. Validate the Gherkin syntax is correct
 5. If file doesn't exist or syntax is invalid, provide clear error message and prompt user to provide valid file path
-6. Check the existing feature files in the feature directory `tests/features` to avoid duplicates and ensure proper naming conventions
+6. Check the existing feature files in the feature directory `src/test/resources/features` to avoid duplicates and ensure proper naming conventions
 
 **Strict Instructions**
 1. Do not proceed if feature file cannot be found or parsed
 2. Provide clear validation errors
-3. Ensure that only new steps are generated if they do not already exist in the target step definition directory `src/test/java/stepDefinitions` or target feature directory `tests/features`
+3. Ensure that only new steps are generated if they do not already exist in the target step definition directory `src/test/java/stepDefinitions` or target feature directory `src/test/resources/features`
 
 ### Step 3: Extract Step Patterns
 The agent should:
@@ -206,7 +206,7 @@ Display:
 
 ## Example Workflow Execution
 
-**User Input:** `tests/features/PROJ-123.feature`
+**User Input:** `src/test/resources/features/PROJ-123.feature`
 
 **Agent Processing:**
 1. ✓ Validates feature file exists and parses 3 scenarios
@@ -225,5 +225,5 @@ Generated step definition file: src/test/java/stepDefinitions/AuthenticationStep
 Next steps:
 1. Implement the TODO methods in AuthenticationSteps.java
 2. Complete locators and methods in LoginPage.java
-3. Run: mvn test -Dcucumber.features=tests/features/PROJ-123.feature
+3. Run: mvn test -Dcucumber.features=src/test/resources/features/PROJ-123.feature
 ```

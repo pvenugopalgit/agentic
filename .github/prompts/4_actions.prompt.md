@@ -209,7 +209,7 @@ public String getElementText(Locator elementLocator) { return elementLocator.tex
 
 **Agent Processing:**
 1. ✓ Validates file exists and contains 4 TODO items
-2. ✓ Locates `tests/features/subscription.feature` 
+2. ✓ Locates `src/test/resources/features/subscription.feature` 
 3. ✓ Parses SubscriptionPage dependencies
 4. ✓ Analyzes 4 step methods with TODOs
 5. ✓ Generates implementations using Page Object methods

@@ -37,7 +37,7 @@ When the agent starts, prompt the user for:
 2. **Log files** – Playwright trace logs, browser console output, stack trace dumps (optional but recommended)
 3. **Screenshot directory** – path to captured failure screenshots (e.g. `reports/screenshots/`)
 4. **Source root** – base path to step definitions and page objects (default: `src/test/java/`)
-5. **Feature files root** – path to feature files (default: `tests/features/`)
+5. **Feature files root** – path to feature files (default: `src/test/resources/features/`)
 
 If no report is provided, ask the user to paste the raw output. If only partial logs are available, proceed with what is provided and note missing data in the final report.
 

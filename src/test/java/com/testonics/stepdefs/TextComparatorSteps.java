@@ -1,5 +1,6 @@
 package com.testonics.stepdefs;
 
+import com.microsoft.playwright.options.LoadState;
 import com.testonics.config.ConfigManager;
 import com.testonics.context.TestContext;
 import com.testonics.pages.TextComparatorPage;
@@ -26,6 +27,7 @@ public class TextComparatorSteps {
     @Given("I navigate to the Text Comparator page")
     public void navigateToTextComparatorPage() {
         testContext.getPage().navigate(config.getBaseUrl());
+        testContext.getPage().waitForLoadState(LoadState.NETWORKIDLE);
         logger.info("Navigated to: {}", config.getBaseUrl());
     }
 

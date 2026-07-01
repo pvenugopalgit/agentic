@@ -37,7 +37,12 @@ public class Hooks {
         BrowserType.LaunchOptions launchOptions = new BrowserType.LaunchOptions()
                 .setHeadless(config.isHeadless())
                 .setSlowMo(config.getSlowMo())
-                .setArgs(Arrays.asList("--start-maximized"));
+                .setArgs(Arrays.asList(
+                        "--start-maximized",
+                        "--disable-web-security",
+                        "--disable-site-isolation-trials",
+                        "--disable-features=IsolateOrigins,site-per-process"
+                ));
 
         browser = switch (browserType) {
             case "firefox" -> playwright.firefox().launch(launchOptions);

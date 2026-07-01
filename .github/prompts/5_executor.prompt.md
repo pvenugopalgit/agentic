@@ -2,7 +2,7 @@
 name: executor
 description: Playwright test executor and self-healing agent. Runs Java Cucumber tests via the Playwright MCP server, captures failures, diagnoses root causes (stale locators, timing, assertion mismatches), auto-heals the step definitions and page objects, and re-runs until green or until a fix requires human input.
 
-tools: ['playwright', 'read_file', 'edit_file', 'grep_search', 'semantic_search', 'terminal', 'agent', 'todo']
+tools: ['read_file', 'edit_file', 'grep_search', 'semantic_search', 'terminal', 'agent', 'todo']
 ---
 
 # Playwright Test Executor & Self-Healing Agent
@@ -17,7 +17,7 @@ tools: ['playwright', 'read_file', 'edit_file', 'grep_search', 'semantic_search'
 
 ## Agent Behavior Requirements
 - **Input**: one of:
-  - A feature file path (e.g. `tests/features/KAN-4.feature`)
+  - A feature file path (e.g. `src/test/resources/features/KAN-4.feature`)
   - A step definition file path (e.g. `src/test/java/stepDefinitions/TextComparisonToolSteps.java`)
   - A tag expression (e.g. `@smoke`, `@regression`)
   - Leave blank to run all discovered feature files
@@ -62,7 +62,7 @@ When the agent starts, ask the user for:
 4. **Headless mode**: yes (default) or no
 
 If the user provides a step definition file, discover the matching feature file automatically:
-- `TextComparisonToolSteps.java` → search `tests/features/` for `*text*comparison*.feature` or `KAN-*.feature` files whose steps match the step annotations
+- `TextComparisonToolSteps.java` → search `src/test/resources/features/` for `*text*comparison*.feature` or `KAN-*.feature` files whose steps match the step annotations
 
 ### Step 2: Discover Test Scenarios
 1. Parse the feature file(s) to extract all scenarios and steps
@@ -289,7 +289,7 @@ public void toolIndicatesEquality() {
 ## Example Workflow Execution
 
 **User Input:**
-- Target: `tests/features/KAN-4.feature`
+- Target: `src/test/resources/features/KAN-4.feature`
 - Base URL: `http://localhost:4200`
 - Browser: chromium (headless)
 

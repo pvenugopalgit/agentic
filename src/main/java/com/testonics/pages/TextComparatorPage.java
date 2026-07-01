@@ -31,8 +31,8 @@ public class TextComparatorPage {
         this.innerFrame = page.frameLocator("iframe").frameLocator("iframe").frameLocator("iframe");
 
         // Initialize locators inside the innermost iframe
-        this.originalTextArea  = innerFrame.locator("textarea").nth(0);
-        this.revisedTextArea   = innerFrame.locator("textarea").nth(1);
+        this.originalTextArea  = innerFrame.locator("//div[@id='left']").nth(0);
+        this.revisedTextArea   = innerFrame.locator("//div[@id='right']").nth(0);
         this.compareButton     = innerFrame.locator("button:has-text('Compare')");
         this.clearButton       = innerFrame.locator("button:has-text('Clear')");
         this.resultSection     = innerFrame.locator(".result, #result, .diff-result, [class*='result']");
@@ -50,8 +50,13 @@ public class TextComparatorPage {
         return pageTitle.first().textContent().trim();
     }
 
+    public void waitForReady() {
+        originalTextArea.waitFor(new Locator.WaitForOptions().setTimeout(60000));
+    }
+
     public void enterOriginalText(String text) {
         logger.info("Entering original text");
+        waitForReady();
         originalTextArea.clear();
         originalTextArea.fill(text);
     }
