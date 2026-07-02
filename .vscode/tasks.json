@@ -1,0 +1,33 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run KAN-6 Tests",
+			"type": "shell",
+			"command": "mvn test -Dcucumber.filter.tags=@KAN-6",
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Run KAN-6 Tests Maven",
+			"type": "shell",
+			"command": "& 'C:\\Program Files\\Apache\\maven\\apache-maven-3.9.16\\bin\\mvn.cmd' test \"-Dcucumber.filter.tags=@KAN-6\"",
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Run KAN-6 Tests Escaped",
+			"type": "shell",
+			"command": "& 'C:\\Program Files\\Apache\\maven\\apache-maven-3.9.16\\bin\\mvn.cmd' test \"-Dcucumber.filter.tags=`@KAN-6\"",
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Run KAN-6 via cmd",
+			"type": "shell",
+			"command": "cmd /c \"\\\"C:\\Program Files\\Apache\\maven\\apache-maven-3.9.16\\bin\\mvn.cmd\\\" test \\\"-Dcucumber.filter.tags=@KAN-6\\\"\"",
+			"problemMatcher": [],
+			"group": "test"
+		}
+	]
+}

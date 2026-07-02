@@ -101,7 +101,10 @@ Generate a Java Cucumber step definition skeleton for the feature file created i
 
 **Governed by**: `.github/prompts/3_pwlocator.prompt.md`
 
-Generate or locate a Page Object class for the feature. The Page Object class should be named `<FeatureName>Page.java` and placed in `src/test/java/pages/`. Each UI element referenced in the feature file should have a corresponding locator field in the Page Object class. If a Page Object already exists for the feature, verify that all required locators are present; if any are missing, add them.
+Launch the url using playwright MCP and inspect the DOM to locate the UI elements referenced in the feature file. Generate a Page Object class for the feature if one does not already exist. The Page Object class should be named `<FeatureName>Page.java` and placed in `src/test/java/pages/`. Each UI element referenced in the feature file should have a corresponding locator field in the Page Object class.
+1. If a Page Object already exists for the feature, verify that all required locators are present; if any are missing, add them.
+2. Ensure that locators are robust and use the most reliable selector strategy available referenced in the prompt `.github/prompts/3_pwlocator.prompt.md`. 
+3. Locators are created using the DOM structure and attributes of the elements. If an element cannot be located, log a warning and continue.
 
 ---
 

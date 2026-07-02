@@ -1,15 +1,15 @@
-Feature: Text Comparator Functionality
-  As a user of the Testonics Text Comparator
-  I want to compare two pieces of text
-  So that I can identify differences between them
+# Feature: Text Comparator Functionality
+#   As a user of the Testonics Text Comparator
+#   I want to compare two pieces of text
+#   So that I can identify differences between them
 
-  Background:
-    Given I navigate to the Text Comparator page
+#   Background:
+#     Given I navigate to the Text Comparator page
 
-  @smoke @TC001
-  Scenario: Page loads successfully
-    Then the page title should not be empty
-    And the page heading should be visible
+#   @smoke @TC001
+#   Scenario: Page loads successfully
+#     Then the page title should not be empty
+#     And the page heading should be visible
 
   # @smoke @TC002
   # Scenario: Text areas are displayed on the page

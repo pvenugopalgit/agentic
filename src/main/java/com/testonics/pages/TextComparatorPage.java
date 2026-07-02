@@ -31,15 +31,15 @@ public class TextComparatorPage {
         this.innerFrame = page.frameLocator("iframe").frameLocator("iframe").frameLocator("iframe");
 
         // Initialize locators inside the innermost iframe
-        this.originalTextArea  = innerFrame.locator("//div[@id='left']").nth(0);
-        this.revisedTextArea   = innerFrame.locator("//div[@id='right']").nth(0);
-        this.compareButton     = innerFrame.locator("button:has-text('Compare')");
-        this.clearButton       = innerFrame.locator("button:has-text('Clear')");
-        this.resultSection     = innerFrame.locator(".result, #result, .diff-result, [class*='result']");
-        this.diffHighlights    = innerFrame.locator(".diff, .highlight, [class*='diff']");
-        this.addedLines        = innerFrame.locator(".added, .ins, [class*='added'], ins");
-        this.removedLines      = innerFrame.locator(".removed, .del, [class*='removed'], del");
-        this.pageTitle         = innerFrame.locator("h1, h2, h3");
+        this.originalTextArea  = innerFrame.locator("#left");
+        this.revisedTextArea   = innerFrame.locator("#right");
+        this.compareButton     = innerFrame.locator("button.compare");
+        this.clearButton       = innerFrame.locator("button.clear");
+        this.resultSection     = innerFrame.locator("#summary");
+        this.diffHighlights    = innerFrame.locator("span.red, span.green");
+        this.addedLines        = innerFrame.locator("span.green");
+        this.removedLines      = innerFrame.locator("span.red");
+        this.pageTitle         = innerFrame.locator("h1");
     }
 
     public String getPageTitle() {
@@ -51,7 +51,9 @@ public class TextComparatorPage {
     }
 
     public void waitForReady() {
-        originalTextArea.waitFor(new Locator.WaitForOptions().setTimeout(60000));
+        originalTextArea.waitFor(new Locator.WaitForOptions()
+            .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE)
+            .setTimeout(60000));
     }
 
     public void enterOriginalText(String text) {
@@ -95,11 +97,11 @@ public class TextComparatorPage {
     }
 
     public String getOriginalTextValue() {
-        return originalTextArea.inputValue();
+        return originalTextArea.innerText();
     }
 
     public String getRevisedTextValue() {
-        return revisedTextArea.inputValue();
+        return revisedTextArea.innerText();
     }
 
     public boolean isOriginalTextAreaEmpty() {
